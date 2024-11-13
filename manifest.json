@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "Make Website Academic",
+    "version": "0.0.1",
+    "host_permissions": ["https://*.bilibili.com/*"],
+    "permissions": ["scripting"],
+    "background": {
+        "service_worker": "scripts/service-worker.js"
+    },
+    "action": {
+        "default_icon": "images/testicon.png"
+    }
+}
