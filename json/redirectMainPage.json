@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/html/replaceMainPage.html"
+            }
+        },
+        "condition": {
+            "urlFilter": "|https://www.bilibili.com|",
+            "resourceTypes": ["main_frame"]
+        }
+    }
+]

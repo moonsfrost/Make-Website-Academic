@@ -3,7 +3,16 @@
     "name": "Make Website Academic",
     "version": "0.0.1",
     "host_permissions": ["https://*.bilibili.com/*"],
-    "permissions": ["scripting"],
+    "permissions": ["scripting",
+                    "webRequest",
+                    "declarativeNetRequest"],
+    "declarative_net_request": {
+        "rule_resources": [{
+            "id": "redirectMainPage_1",
+            "enabled": true,
+            "path": "/json/redirectMainPage.json"
+        }]
+    },
     "background": {
         "service_worker": "scripts/service-worker.js"
     },

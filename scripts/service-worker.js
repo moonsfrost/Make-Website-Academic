@@ -11,7 +11,17 @@ async function simpleInsertCSS(tab) {
     })
 }
 
-chrome.action.onClicked.addListener(async () => {
-    let tab=await GetCurrentTab();
-    await simpleInsertCSS(tab);
+chrome.action.onClicked.addListener(async (tab) => {
+    await chrome.scripting.removeCSS({
+        files: ["/css/testClear.css"],
+        target: {tabId: tab.id}
+    })
 })  
+
+chrome.tabs.onUpdated.addListener(async (tabid,obeject,tab) =>{
+    // await chrome.scripting.insertCSS({
+    //     files: ["/css/videoShieldRecommend.css"],
+    //     target: {tabId: tabid}
+    // })
+})
+

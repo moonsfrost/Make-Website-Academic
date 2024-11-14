@@ -1,3 +1,11 @@
 *{
     display: none !important;
 }
+
+html,
+body,
+*:has(.center-search-container),
+.center-search-container,
+.center-search-container *{
+    display: revert !important;
+}
