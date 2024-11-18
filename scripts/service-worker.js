@@ -4,9 +4,20 @@ async function GetCurrentTab() {
     return tab;
 }
 
+chrome.scripting.registerContentScripts([{
+    id: "mainPageProcesser",
+    js: ["scripts/mainPageProcesser.js"],
+    matches: ["https://www.bilibili.com/"],
+    persistAcrossSessions: false,
+    runAt: "document_end"
+}])
+.then(() => {console.log("success!");})
+.catch((err) => {console.warn("ERR",err)});
+
+
 async function simpleInsertCSS(tab) {
     await chrome.scripting.insertCSS({
-        files: ["/css/testClear.css"],
+        files: ["/css/shieldChannelBar.css"],
         target: {tabId: tab.id}
     })
 }
@@ -18,10 +29,13 @@ chrome.action.onClicked.addListener(async (tab) => {
     })
 })  
 
+var flag=0;
+
 chrome.tabs.onUpdated.addListener(async (tabid,obeject,tab) =>{
-    // await chrome.scripting.insertCSS({
-    //     files: ["/css/videoShieldRecommend.css"],
-    //     target: {tabId: tabid}
-    // })
+    if(flag==false) await chrome.scripting.insertCSS({
+        files: ["/css/MPFastSheild.css"],
+        target: {tabId: tabid}
+    })
+    flag=true;
 })
 

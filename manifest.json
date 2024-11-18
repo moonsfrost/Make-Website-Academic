@@ -6,17 +6,11 @@
     "permissions": ["scripting",
                     "webRequest",
                     "declarativeNetRequest"],
-    "declarative_net_request": {
-        "rule_resources": [{
-            "id": "redirectMainPage_1",
-            "enabled": true,
-            "path": "/json/redirectMainPage.json"
-        }]
-    },
     "background": {
         "service_worker": "scripts/service-worker.js"
     },
     "action": {
-        "default_icon": "images/testicon.png"
+        "default_icon": "images/testicon.png",
+        "default_popup": "html/replaceMainPage.html"
     }
 }

@@ -1,0 +1,8 @@
+.header-channel,
+.palette-button-outer,
+.bili-header__banner,
+.bili-header__channel,
+.bili-mini-mask,
+.bili-feed4-layout{
+    display: none !important;
+}
