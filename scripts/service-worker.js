@@ -1,3 +1,6 @@
+const mainPageUrl="https://www.bilibili.com/";
+const searchPageUrl="https://search.bilibili.com/";
+
 async function GetCurrentTab() {
     let nowRequirment={active: true, lastFocusedWindow: true};
     let [tab] =await chrome.tabs.query(nowRequirment);
@@ -7,7 +10,7 @@ async function GetCurrentTab() {
 chrome.scripting.registerContentScripts([{
     id: "mainPageProcesser",
     js: ["scripts/mainPageProcesser.js"],
-    matches: ["https://www.bilibili.com/"],
+    matches: [mainPageUrl],
     persistAcrossSessions: false,
     runAt: "document_end"
 }])
@@ -29,13 +32,23 @@ chrome.action.onClicked.addListener(async (tab) => {
     })
 })  
 
-var flag=0;
+async function mainPageAcademic(tab){
+    chrome.scripting.insertCSS({
+        files: ["/css/headerShield.css","/css/mainPageAca.css"],
+        target: {tabId: tab.id}
+    })
+}
+
+async function searchPageAcademic(tab){
+    chrome.scripting.insertCSS({
+        css: "#bili-header-container{display: none !important;}",
+        target: {tabId: tab.id}
+    })
+}
 
 chrome.tabs.onUpdated.addListener(async (tabid,obeject,tab) =>{
-    if(flag==false) await chrome.scripting.insertCSS({
-        files: ["/css/MPFastSheild.css"],
-        target: {tabId: tabid}
-    })
-    flag=true;
+    console.log(tab.url);
+    if(tab.url===mainPageUrl) mainPageAcademic(tab);
+    else if(tab.url.startsWith(searchPageUrl)) searchPageAcademic(tab);
 })
 

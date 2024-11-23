@@ -1,0 +1,47 @@
+
+.bili-mini-mask,
+.bili-feed4-layout{
+    display: none !important;
+}
+
+*[class="bili-header large-header"],
+*[class="bili-header__bar"]{
+    min-height: 100% !important;
+}
+
+.center-search-container{
+    position: fixed !important;
+    width: 40%;
+    top: 35%;
+    left: 30%;
+} 
+
+div.listContainer{
+    position: fixed;
+    left: 60%;
+    top: 60%;
+    width: 40%;
+    border-radius: 10px;
+    background-color: rgb(198, 232, 252);
+}
+div.list{
+    border: 1px solid;
+    border-radius: 10px;
+    margin: 2px;
+}
+div.part{
+    border: 1px solid;
+    border-radius: 10px;
+    margin: 10px;
+}
+span.partText{
+    margin-left: 5%;
+}
+
+div.readyDel:hover{
+    background-color: red;
+}
+
+.hidden{
+    display: none !important;
+}
