@@ -13,5 +13,11 @@
     "action": {
         "default_icon": "images/testicon.png",
         "default_popup": "html/replaceMainPage.html"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["images/*"],
+            "matches": ["https://www.bilibili.com/*"]
+        }
+    ]
 }

@@ -9,7 +9,7 @@ async function GetCurrentTab() {
 
 chrome.scripting.registerContentScripts([{
     id: "mainPageProcesser",
-    js: ["scripts/mainPageProcesser.js"],
+    js: ["scripts/listMaker.js","scripts/mainPageProcesser.js"],
     matches: [mainPageUrl],
     persistAcrossSessions: false,
     runAt: "document_end"
@@ -34,7 +34,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 
 async function mainPageAcademic(tab){
     chrome.scripting.insertCSS({
-        files: ["/css/headerShield.css","/css/mainPageAca.css"],
+        files: ["/css/headerShield.css","/css/mainPageAca.css","css/list.css"],
         target: {tabId: tab.id}
     })
 }

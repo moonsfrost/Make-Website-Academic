@@ -1,0 +1,37 @@
+.listName{
+    margin-left: 30px;
+}
+img.listIcon{
+    float: right;
+    width: 20px;
+    vertical-align: middle;
+}
+div.listContainer{
+    position: fixed;
+    left: 60%;
+    top: 60%;
+    width: 40%;
+    border-radius: 10px;
+    background-color: rgb(198, 232, 252);
+}
+div.list{
+    border: 1px solid;
+    border-radius: 10px;
+    margin: 2px;
+}
+div.part{
+    border: 1px solid;
+    border-radius: 10px;
+    margin: 10px;
+}
+span.partText{
+    margin-left: 5%;
+}
+
+div.readyDel:hover{
+    background-color: red;
+}
+
+.hidden{
+    display: none !important;
+}

@@ -18,29 +18,11 @@ async function removePlaceHolder(){
 removeMainBody();
 removePlaceHolder();
 
-function addListContainer(){
-    var container=document.createElement("div");
-    container.classList.add("listContainer");
-    document.body.appendChild(container);
+function setList(){
+    addListContainer();
+    addList();
+    addList();
+    addPart(document.querySelector(".list"));
 }
 
-function addList(){
-    var p=document.createElement("div");
-    p.classList.add("list");
-    var listTitle=document.createElement("p");
-    listTitle.innerHTML="test title";
-    p.appendChild(listTitle);
-    document.querySelector(".listContainer").appendChild(p);
-}
-
-function addPart(fa){
-    var p = document.createElement("div");
-    p.classList.add("part");
-    p.innerHTML="<span class=\"partText\">are you ok?</span>";
-    fa.appendChild(p);
-}
-
-addListContainer();
-addList();
-addList();
-addPart(document.querySelector(".list"));
+setList();
