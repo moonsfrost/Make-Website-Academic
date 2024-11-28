@@ -1,18 +1,51 @@
-function addListContainer(){
-    var container=document.createElement("div");
-    container.classList.add("listContainer");
-    document.body.appendChild(container);
-}
-
 const imgFIle=chrome.runtime.getURL("images/");
 function checkSRC(pos,name){
     return pos.src===imgFIle+name;
 }
+function strShift(str){
+    if(str.startsWith("[*]")) 
+        str="<a href=\""+window.location.href+"\">"+str.substring(3)+"</a>";
+    return str;
+}
+function strReShift(str){
+    if(str.startsWith("<a href=\"")){
+        let i=1,l=1;
+        for(let c of str){
+            if(c==='>'){
+                l=i;
+                break;
+            }
+            i++;
+        }
+        str="[*]"+str.substring(l,str.length-4);
+    }
+    return str;
+}
 
+function addListContainer(){
+    var container=document.createElement("div");
+    container.classList.add("listContainer");
+    var ti=document.createElement("p");
+    ti.innerHTML="随时记";
+    var ic=document.createElement("img");
+    ic.src=imgFIle+"add.svg";
+    ic.classList.add("listIcon");
+    ti.appendChild(ic);
+    container.appendChild(ti);
+    document.body.appendChild(container);
+    ic.addEventListener("click",()=>{addList("qwe")});
+}
 
 function delPart(e){
     var pos=e.parentNode;
     pos.remove();
+}
+
+function addPart(fa,str){
+    var p = document.createElement("div");
+    p.classList.add("part");
+    p.innerHTML="<span class=\"partText\">"+strShift(str)+"</span>";
+    fa.appendChild(p);
 }
 
 function finishEditPart(){ // to finish the edit of the part's text
@@ -22,7 +55,7 @@ function finishEditPart(){ // to finish the edit of the part's text
     if(this.src===imgFIle+"no.svg"){
         tex=pos.querySelector(".newText").getAttribute("oldvalue");
     }
-    pos.innerHTML="<span class=\"partText\">"+tex+"</span>";
+    pos.innerHTML="<span class=\"partText\">"+strShift(tex)+"</span>";
 
     //restore the icons
     for (let i of ["edit.svg","del.svg"]){
@@ -39,8 +72,9 @@ function beginEditPart(e){
     var pos=e.parentNode;
 
     // change span to input
-    var tex=pos.querySelector(".partText").textContent;
-    pos.innerHTML="<input type=\"text\" class=\"newText\" value=\""+tex+"\">";
+    var tex=pos.querySelector(".partText").innerHTML;
+    pos.innerText="";
+    pos.innerHTML="<input type=\"text\" class=\"newText\" value=\""+strReShift(tex)+"\">";
     pos.querySelector(".newText").setAttribute("oldvalue",tex);
 
     // add icons
@@ -80,13 +114,13 @@ function editList(e){
     }
 }
 
-function addList(){
+function addList(str){
     var list=document.createElement("div");
     list.classList.add("list");
 
     var listTitle=document.createElement("p");
     listTitle.classList.add("listName");
-    listTitle.innerHTML="test title";
+    listTitle.innerHTML=str;
 
     list.appendChild(listTitle);
     list.setAttribute("editflag","off");
@@ -98,15 +132,9 @@ function addList(){
         ic.classList.add("listIcon");
         listTitle.appendChild(ic);
         if(i==="edit.svg") ic.addEventListener("click",(e)=>{editList(e.currentTarget)});
-        else if(i==="add.svg") {}//need add
+        else if(i==="add.svg") ic.addEventListener("click",(e)=>{addPart(e.currentTarget.parentNode.parentNode,"bac")});//need add
     }
 
 }
 
-function addPart(fa){
-    var p = document.createElement("div");
-    p.classList.add("part");
-    p.innerHTML="<span class=\"partText\">are you ok?</span>";
-    fa.appendChild(p);
-}
 

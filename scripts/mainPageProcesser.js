@@ -20,9 +20,9 @@ removePlaceHolder();
 
 function setList(){
     addListContainer();
-    addList();
-    addList();
-    addPart(document.querySelector(".list"));
+    addList("test1");
+    addList("test2");
+    addPart(document.querySelector(".list"),"wuhu");
 }
 
 setList();
