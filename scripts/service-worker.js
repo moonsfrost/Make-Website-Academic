@@ -52,3 +52,8 @@ chrome.tabs.onUpdated.addListener(async (tabid,obeject,tab) =>{
     else if(tab.url.startsWith(searchPageUrl)) searchPageAcademic(tab);
 })
 
+chrome.runtime.onInstalled.addListener(()=>{
+    chrome.storage.local.clear().then(()=>{
+        chrome.storage.local.set({["lists"]:[]});
+    })
+})

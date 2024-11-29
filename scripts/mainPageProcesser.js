@@ -25,4 +25,4 @@ function setList(){
     addPart(document.querySelector(".list"),"wuhu");
 }
 
-setList();
+buildList();
