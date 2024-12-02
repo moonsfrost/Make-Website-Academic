@@ -1,5 +1,6 @@
 const mainPageUrl="https://www.bilibili.com/";
 const searchPageUrl="https://search.bilibili.com/";
+const videoPageUrl="https://www.bilibili.com/video/";
 
 async function GetCurrentTab() {
     let nowRequirment={active: true, lastFocusedWindow: true};
@@ -7,36 +8,27 @@ async function GetCurrentTab() {
     return tab;
 }
 
-chrome.scripting.registerContentScripts([{
-    id: "mainPageProcesser",
-    js: ["scripts/listMaker.js","scripts/mainPageProcesser.js"],
-    matches: [mainPageUrl],
-    persistAcrossSessions: false,
-    runAt: "document_end"
-}])
-.then(() => {console.log("success!");})
-.catch((err) => {console.warn("ERR",err)});
-
-
-async function simpleInsertCSS(tab) {
-    await chrome.scripting.insertCSS({
-        files: ["/css/shieldChannelBar.css"],
-        target: {tabId: tab.id}
-    })
-}
-
-chrome.action.onClicked.addListener(async (tab) => {
-    await chrome.scripting.removeCSS({
-        files: ["/css/testClear.css"],
-        target: {tabId: tab.id}
-    })
-})  
-
-async function mainPageAcademic(tab){
-    chrome.scripting.insertCSS({
-        files: ["/css/headerShield.css","/css/mainPageAca.css","css/list.css"],
-        target: {tabId: tab.id}
-    })
+function modeShift(flag){
+    if(flag===0){
+        chrome.scripting.registerContentScripts([{
+            id: "mainPageForAca",
+            js: ["scripts/listMaker.js","scripts/mainPageProcesser.js"],
+            css: ["css/headerShield.css","css/mainPageAca.css","css/list.css"],
+            matches: [mainPageUrl],
+            persistAcrossSessions: false,
+            runAt: "document_end"
+        },{
+            id: "videoPageForAca",
+            js: ["scripts/videoPageProcesser.js"],
+            css: ["css/videoShieldRecommend.css"],
+            matches: [videoPageUrl+"*"],
+            persistAcrossSessions: false,
+            runAt: "document_end"
+        }])
+    }
+    else if(flag===1){
+        chrome.scripting.unregisterContentScripts({ids: ["mainPageForAca","videoPageForAca"]});
+    }
 }
 
 async function searchPageAcademic(tab){
@@ -46,14 +38,16 @@ async function searchPageAcademic(tab){
     })
 }
 
-chrome.tabs.onUpdated.addListener(async (tabid,obeject,tab) =>{
-    console.log(tab.url);
-    if(tab.url===mainPageUrl) mainPageAcademic(tab);
-    else if(tab.url.startsWith(searchPageUrl)) searchPageAcademic(tab);
+
+chrome.storage.onChanged.addListener((chg,area)=>{
+    for(let [key,{oldValue, newValue}] of Object.entries(chg)){
+        if(key==="mode") modeShift(newValue);
+    }
 })
 
 chrome.runtime.onInstalled.addListener(()=>{
     chrome.storage.local.clear().then(()=>{
         chrome.storage.local.set({["lists"]:[]});
+        chrome.storage.local.set({["mode"]: 0});
     })
 })

@@ -24,7 +24,7 @@ function strShift(str){
             }
             i++;
         }
-        if(r!=-1) str="<a href=\""+str.substring(1,r-1)+"\">"+str.substring(r+1)+"</a>";
+        if(r!=-1) str="<a href=\""+str.substring(1,r)+"\">"+str.substring(r+1)+"</a>";
     }
     return str;
 }
