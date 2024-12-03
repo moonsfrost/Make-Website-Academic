@@ -3,3 +3,5 @@
         - [pos] -> text
 
 - mode -> 0/1
+- beginTime -> Date.getTime()
+- limitTime -> 30 (deflaut)
