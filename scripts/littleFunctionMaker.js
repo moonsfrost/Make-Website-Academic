@@ -8,13 +8,18 @@ function buildLittleF(){
     return box;
 }
 
-function historyMake(){
-    var his=document.createElement("a");
-    hisFile=chrome.runtime.getURL("images/history.svg");
-    his.innerHTML="<img src=\""+hisFile+"\" class=\"historyBtn\"/>";
-    his.href="#"; //need add url
-    LFbox.appendChild(his);
+function addBtn(file,url){
+    var p=document.createElement("a");
+    var pFile=chrome.runtime.getURL("images/"+file);
+    p.innerHTML="<img src=\""+pFile+"\" class=\"BTN\"/>";
+    p.href=url;
+    LFbox.appendChild(p);
 }
 
 var LFbox=buildLittleF();
-historyMake();
+
+addBtn("history.svg","https://www.bilibili.com/account/history");
+
+chrome.storage.local.get("mode").then((item)=>{
+    if(item["mode"]===1) addBtn("trend.svg","https://t.bilibili.com/");
+})

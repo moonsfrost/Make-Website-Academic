@@ -1,6 +1,7 @@
 const mainPageUrl="https://www.bilibili.com/";
 const searchPageUrl="https://search.bilibili.com/";
 const videoPageUrl="https://www.bilibili.com/video/";
+const trendPageUrl="https://t.bilibili.com/"
 
 function getDateHash(){
     let d = new Date;
@@ -12,22 +13,34 @@ async function GetCurrentTab() {
     let [tab] =await chrome.tabs.query(nowRequirment);
     return tab;
 }
+async function injectMainFun(){
+    let check=await chrome.scripting.getRegisteredContentScripts({ids: ["mainPageForAca"]});
+    if(check.length>0) return;
+    chrome.scripting.registerContentScripts([{
+        id: "mainPageForAca",
+        js: ["scripts/listMaker.js","scripts/mainPageProcesser.js","scripts/littleFunctionMaker.js"],
+        css: ["css/mainPageAca.css","css/list.css"],
+        matches: [mainPageUrl],
+        persistAcrossSessions: false,
+        runAt: "document_end"
+    },{
+        id: "headShield",
+        css: ["css/headerShield.css"],
+        matches: [mainPageUrl+"*",searchPageUrl+"*",trendPageUrl+"*"],
+        persistAcrossSessions: false,
+        runAt: "document_end"
+    }]);
+}
 async function jsShift(flag){
     if(flag===0){// Academic mode
-        let check=await chrome.scripting.getRegisteredContentScripts({ids: ["mainPageForAca"]});
+        injectMainFun();
+        let check=await chrome.scripting.getRegisteredContentScripts({ids: ["videoPageForAca"]});
         console.log(check);
         if(check.length>0) return;
         chrome.scripting.registerContentScripts([{
-            id: "mainPageForAca",
-            js: ["scripts/listMaker.js","scripts/mainPageProcesser.js","scripts/littleFunctionMaker.js"],
-            css: ["css/headerShield.css","css/mainPageAca.css","css/list.css"],
-            matches: [mainPageUrl],
-            persistAcrossSessions: false,
-            runAt: "document_end"
-        },{
             id: "videoPageForAca",
             js: ["scripts/listMaker.js","scripts/videoPageProcesser.js","scripts/littleFunctionMaker.js"],
-            css: ["css/headerShield.css","css/videoShieldRecommend.css","css/list.css"],
+            css: ["css/videoShieldRecommend.css","css/list.css"],
             matches: [videoPageUrl+"*"],
             persistAcrossSessions: false,
             runAt: "document_end"
@@ -37,33 +50,54 @@ async function jsShift(flag){
         chrome.scripting.unregisterContentScripts({ids: ["videoPageForRec"]});
     }
     else if(flag===1){
+        injectMainFun();
         let check=await chrome.scripting.getRegisteredContentScripts({ids: ["videoPageForRec"]});
         if(check.length>0) return;
         chrome.scripting.registerContentScripts([{
             id: "videoPageForRec",
+            js: ["scripts/littleFunctionMaker.js"],
             css: ["css/videoShieldRecommend.css"],
             matches: [videoPageUrl+"*"],
             persistAcrossSessions: false,
             runAt: "document_end"
         }])
-        check=await chrome.scripting.getRegisteredContentScripts({ids: ["mainPageForAca"]});
+        check=await chrome.scripting.getRegisteredContentScripts({ids: ["videoPageForAca"]});
         if(check.length===0) return;
-        chrome.scripting.unregisterContentScripts({ids: ["mainPageForAca","videoPageForAca"]});
+        chrome.scripting.unregisterContentScripts({ids: ["videoPageForAca"]});
     }
     else if(flag===-1){
         var allJS=await chrome.scripting.getRegisteredContentScripts();
         var jsIds=allJS.map(allJS => allJS.id);
-        chrome.scripting.unregisterContentScripts(jsIds);
+        chrome.scripting.unregisterContentScripts({ids: jsIds});
+    }
+}
+function redirectShift(flag){
+    if(flag===0){
+        chrome.declarativeNetRequest.updateEnabledRulesets({
+            enableRulesetIds: ["redirectOtherPage","redirectForAca"]
+        })
+    }
+    else if(flag===1){
+        chrome.declarativeNetRequest.updateEnabledRulesets({
+            disableRulesetIds: ["redirectForAca"],
+            enableRulesetIds: ["redirectOtherPage"]
+        })
+    }
+    else if(flag===-1){
+        chrome.declarativeNetRequest.updateEnabledRulesets({
+            disableRulesetIds: ["redirectOtherPage","redirectForAca"]
+        })
     }
 }
 
 function modeShift(flag,alarmNeed){ //alarmNeed is only for when set a new recreation time
-    jsShift(flag)
+    jsShift(flag);
+    redirectShift(flag);
     if(flag===0||flag===-1){ //Academic or fullrec mode
         if(flag===0) console.log("switch to aca mode");
         else console.log("switch to full rec mode");
 
-        if(flag===-1) chrome.storage.set({fullTime: getDateHash()});
+        if(flag===-1) chrome.storage.local.set({fullTime: getDateHash()});
         // remove alarms
         chrome.alarms.clear("limitRecreation");
         chrome.storage.local.set({["alarmBeginTime"]: -1});

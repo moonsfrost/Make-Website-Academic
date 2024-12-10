@@ -1,7 +1,8 @@
-- list -> array
+- lists -> array
     - [listTitle] -> object
         - [pos] -> text
-
+- listTitles -> array
 - mode -> 0/1
 - beginTime -> Date.getTime()
 - limitTime -> 30 (deflaut)
+- fullTime -> year*10000+month*100+date

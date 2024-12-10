@@ -7,12 +7,17 @@ img.listIcon{
     vertical-align: middle;
 }
 div.listContainer{
+    z-index: 10000;
     position: fixed;
-    left: 60%;
+    right: 0%;
     top: 60%;
     width: 40%;
     border-radius: 10px;
     background-color: rgb(198, 232, 252);
+}
+div.videoStatu{
+    top: 20%;
+    width: 31%;
 }
 div.list{
     border: 1px solid;

@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "url": "https://www.bilibili.com"
+            }
+        },
+        "condition": {
+            "urlFilter": "live.bilibili.com",
+            "resourceTypes": ["main_frame"]
+        }
+    },{
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "url": "https://www.bilibili.com"
+            }
+        },
+        "condition": {
+            "urlFilter": "game.bilibili.com",
+            "resourceTypes": ["main_frame"]
+        }
+    },{
+        "id": 3,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "url": "https://www.bilibili.com"
+            }
+        },
+        "condition": {
+            "urlFilter": "https://www.bilibili.com/anime/",
+            "resourceTypes": ["main_frame"]
+        }
+    },{
+        "id": 4,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "url": "https://www.bilibili.com"
+            }
+        },
+        "condition": {
+            "urlFilter": "https://show.bilibili.com/",
+            "resourceTypes": ["main_frame"]
+        }
+    },{
+        "id": 5,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "url": "https://www.bilibili.com"
+            }
+        },
+        "condition": {
+            "urlFilter": "https://www.bilibili.com/match",
+            "resourceTypes": ["main_frame"]
+        }
+    }
+]

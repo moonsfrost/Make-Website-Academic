@@ -223,7 +223,10 @@ function toggleHide(e){
 }
 
 async function buildList(){
-    addListContainer();
+    var cter=addListContainer();
+    if(window.location.href.startsWith("https://www.bilibili.com/video")){
+        cter.classList.add("videoStatu");
+    }
     var tot=await chrome.storage.local.get("lists");
     var tts=await chrome.storage.local.get("listTitles");
     // alert(tot["lists"]);

@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Make Website Academic",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "host_permissions": ["https://*.bilibili.com/*"],
     "permissions": ["scripting",
                     "webRequest",
@@ -18,8 +18,19 @@
     },
     "web_accessible_resources": [
         {
-            "resources": ["images/*","css/littleFunction.css"],
+            "resources": ["images/*","css/littleFunction.css","css/headerShield.css"],
             "matches": ["https://www.bilibili.com/*"]
         }
-    ]
+    ],
+    "declarative_net_request": {
+        "rule_resources": [{
+            "id": "redirectOtherPage",
+            "enabled": false,
+            "path": "/json/redirectOtherPage.json"
+        },{
+            "id": "redirectForAca",
+            "enabled": false,
+            "path": "/json/redirectForAca.json"
+        }]
+    }
 }

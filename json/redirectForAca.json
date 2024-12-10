@@ -5,11 +5,11 @@
         "action": {
             "type": "redirect",
             "redirect": {
-                "extensionPath": "/html/replaceMainPage.html"
+                "url": "https://www.bilibili.com"
             }
         },
         "condition": {
-            "urlFilter": "|https://www.bilibili.com|",
+            "urlFilter": "t.bilibili.com",
             "resourceTypes": ["main_frame"]
         }
     }

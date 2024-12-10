@@ -8,7 +8,8 @@ chrome.storage.local.get("mode").then((item)=>{
 btn.addEventListener("click",()=>{
     chrome.storage.local.get("mode").then((item)=>{
         var v=item["mode"];
-        v=1^v;
+        if(v===0) v=1;
+        else v=0;
         var btn=document.querySelector(".shiftModeButton");
         btn.setAttribute("statu",v===0?"aca":"rec");
         chrome.storage.local.set({mode: v});
