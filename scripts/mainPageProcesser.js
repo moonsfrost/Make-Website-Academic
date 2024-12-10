@@ -18,11 +18,3 @@ async function removePlaceHolder(){
 removeMainBody();
 removePlaceHolder();
 
-function setList(){
-    addListContainer();
-    addList("test1");
-    addList("test2");
-    addPart(document.querySelector(".list"),"wuhu");
-}
-
-buildList();

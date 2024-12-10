@@ -35,3 +35,13 @@ div.readyDel:hover{
 .hidden{
     display: none !important;
 }
+.newText{
+    margin-left: 10px;
+    width: 60%;
+}
+.newText:focus{
+    background-color: rgb(180, 228, 199);
+}
+.containerTitle{
+    margin-left: 35%;
+}

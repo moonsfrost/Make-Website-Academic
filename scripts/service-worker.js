@@ -2,27 +2,32 @@ const mainPageUrl="https://www.bilibili.com/";
 const searchPageUrl="https://search.bilibili.com/";
 const videoPageUrl="https://www.bilibili.com/video/";
 
+function getDateHash(){
+    let d = new Date;
+    var hash=d.getFullYear*10000+d.getMonth()*100+d.getDate();
+    return hash;
+}
 async function GetCurrentTab() {
     let nowRequirment={active: true, lastFocusedWindow: true};
     let [tab] =await chrome.tabs.query(nowRequirment);
     return tab;
 }
 async function jsShift(flag){
-    if(flag===0){
+    if(flag===0){// Academic mode
         let check=await chrome.scripting.getRegisteredContentScripts({ids: ["mainPageForAca"]});
         console.log(check);
         if(check.length>0) return;
         chrome.scripting.registerContentScripts([{
             id: "mainPageForAca",
-            js: ["scripts/listMaker.js","scripts/mainPageProcesser.js"],
+            js: ["scripts/listMaker.js","scripts/mainPageProcesser.js","scripts/littleFunctionMaker.js"],
             css: ["css/headerShield.css","css/mainPageAca.css","css/list.css"],
             matches: [mainPageUrl],
             persistAcrossSessions: false,
             runAt: "document_end"
         },{
             id: "videoPageForAca",
-            js: ["scripts/videoPageProcesser.js"],
-            css: ["css/videoShieldRecommend.css"],
+            js: ["scripts/listMaker.js","scripts/videoPageProcesser.js","scripts/littleFunctionMaker.js"],
+            css: ["css/headerShield.css","css/videoShieldRecommend.css","css/list.css"],
             matches: [videoPageUrl+"*"],
             persistAcrossSessions: false,
             runAt: "document_end"
@@ -45,12 +50,20 @@ async function jsShift(flag){
         if(check.length===0) return;
         chrome.scripting.unregisterContentScripts({ids: ["mainPageForAca","videoPageForAca"]});
     }
+    else if(flag===-1){
+        var allJS=await chrome.scripting.getRegisteredContentScripts();
+        var jsIds=allJS.map(allJS => allJS.id);
+        chrome.scripting.unregisterContentScripts(jsIds);
+    }
 }
 
 function modeShift(flag,alarmNeed){ //alarmNeed is only for when set a new recreation time
     jsShift(flag)
-    if(flag===0){ //Academic mode
-        console.log("switch to aca mode");
+    if(flag===0||flag===-1){ //Academic or fullrec mode
+        if(flag===0) console.log("switch to aca mode");
+        else console.log("switch to full rec mode");
+
+        if(flag===-1) chrome.storage.set({fullTime: getDateHash()});
         // remove alarms
         chrome.alarms.clear("limitRecreation");
         chrome.storage.local.set({["alarmBeginTime"]: -1});
@@ -87,6 +100,7 @@ chrome.storage.onChanged.addListener((chg,area)=>{
 chrome.runtime.onInstalled.addListener(()=>{
     chrome.storage.local.clear().then(()=>{
         chrome.storage.local.set({["lists"]:[]});
+        chrome.storage.local.set({["listTitles"]:[]});
         chrome.storage.local.set({["mode"]: 0});
         chrome.storage.local.set({["alarmBeginTime"]: -1});
         chrome.storage.local.set({["limitTime"]: 1});
@@ -107,6 +121,13 @@ chrome.storage.local.get("mode").then((item)=>{
 });
 async function recoverStatu(){
     // ensure every last check have a mode setting
+    let dateHash=await chrome.storage.local.get("fullTime");
+    let code=await chrome.storage.local.get("mode");
+    if(code.mode===-1){
+        if(dateHash!==getDateHash()) chrome.storage.local.set({mode: -1});
+        return;
+    }
+
     let item= await chrome.storage.local.get("alarmBeginTime");
     let lim= await chrome.storage.local.get("limitTime");
     lim=lim.limitTime;

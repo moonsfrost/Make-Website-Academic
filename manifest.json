@@ -18,7 +18,7 @@
     },
     "web_accessible_resources": [
         {
-            "resources": ["images/*"],
+            "resources": ["images/*","css/littleFunction.css"],
             "matches": ["https://www.bilibili.com/*"]
         }
     ]

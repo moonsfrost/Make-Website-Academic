@@ -53,6 +53,7 @@ function addListContainer(){
     var container=document.createElement("div");
     container.classList.add("listContainer");
     var ti=document.createElement("p");
+    ti.classList.add("containerTitle");
     ti.innerHTML="随时记";
     var ic=document.createElement("img");
     ic.src=imgFIle+"add.svg";
@@ -60,7 +61,7 @@ function addListContainer(){
     ti.appendChild(ic);
     container.appendChild(ti);
     document.body.appendChild(container);
-    ic.addEventListener("click",()=>{newList("qwe")});
+    ic.addEventListener("click",()=>{newList()});
     return container;
 }
 
@@ -89,8 +90,8 @@ function newPart(fa){
     beginEditPart(p.children[0]);
 }
 
-function finishEditPart(){ // to finish the edit of the part's text
-    var pos=this.parentNode;//pos is the part
+function finishEditPart(e){ // to finish the edit of the part's text
+    var pos=e.parentNode;//pos is the part
     // change input to span
     var tex=pos.querySelector(".newText").value;
     if(this.src===imgFIle+"no.svg"){
@@ -99,6 +100,7 @@ function finishEditPart(){ // to finish the edit of the part's text
     pos.innerHTML="<span class=\"partText\">"+strShift(tex)+"</span>";
     changePartValue(pos,strShift(tex));
     //restore the icons
+    if(pos.parentNode.getAttribute("editflag")==="off") return;
     for (let i of ["edit.svg","del.svg"]){
         var ic=document.createElement("img");
         ic.src=imgFIle+i;
@@ -124,16 +126,28 @@ function beginEditPart(e){
         ic.src=imgFIle+i;
         ic.classList.add("listIcon");
         pos.appendChild(ic);
-        ic.addEventListener("click",finishEditPart);
+        ic.addEventListener("click",(e)=>{finishEditPart(e.currentTarget)});
     }
-    // 
+    // focus on the right border automatically
+    let inp=pos.querySelector(".newText");
+    let len=inp.value.length;
+    inp.focus();
+    inp.setSelectionRange(len,len);
 }
 
 function editList(e){
     var temp=e.parentNode;
     var pos=temp.parentNode;
     let parts=pos.querySelectorAll(".part");
+    let ti=temp.querySelector("span");
+
+    //to stop the statu of editing part
+    let editingparts=pos.querySelectorAll(".newText");
+    for(let p of editingparts) finishEditPart(p);
+
     if(pos.getAttribute("editflag")==="off"){
+        let oldTitle=ti.innerHTML;
+        ti.innerHTML="<input value=\""+oldTitle+"\"/>";
         for(let p of parts){
             for (let i of ["edit.svg","del.svg"]){
                 var ic=document.createElement("img");
@@ -147,6 +161,13 @@ function editList(e){
         pos.setAttribute("editflag","on");
     }
     else{
+        let newTitle=ti.querySelector("input").value;
+        ti.innerHTML=newTitle;
+        chrome.storage.local.get("listTitles").then((item)=>{
+            let arr=item["listTitles"];
+            arr[getPos(pos)-1]=newTitle;
+            chrome.storage.local.set({listTitles: arr});
+        })
         for(let p of parts){
             let icons=p.querySelectorAll(".listIcon");
             for(let i of icons) i.remove();
@@ -154,13 +175,20 @@ function editList(e){
         pos.setAttribute("editflag","off");
     }
 }
-function newList(str){
+function newList(){
     chrome.storage.local.get("lists").then((item)=>{
         var ls=item["lists"];
+        let str="表"+ls.length;
         ls.push(str);
         chrome.storage.local.set({"lists":ls});
         chrome.storage.local.set({[str]:{}});
         addList(str);
+    })
+    chrome.storage.local.get("listTitles").then((item)=>{
+        var ls=item["listTitles"];
+        let str="表"+ls.length;
+        ls.push(str);
+        chrome.storage.local.set({"listTitles":ls});
     })
 }
 
@@ -171,7 +199,7 @@ function addList(str){
 
     var listTitle=document.createElement("p");
     listTitle.classList.add("listName");
-    listTitle.innerHTML=str;
+    listTitle.innerHTML="<span>"+str+"</span>";
 
     list.appendChild(listTitle);
     list.setAttribute("editflag","off");
@@ -189,14 +217,24 @@ function addList(str){
     return list;
 }
 
+function toggleHide(e){
+    var pos=e.parentNode;
+
+}
+
 async function buildList(){
     addListContainer();
     var tot=await chrome.storage.local.get("lists");
+    var tts=await chrome.storage.local.get("listTitles");
     // alert(tot["lists"]);
-    for(let tit of tot["lists"]){
-        var pos=addList(tit);
+    for(i=0;i<tot["lists"].length;i++){
+        let tit=tot["lists"][i];
+        let tt=tts["listTitles"][i];
+        var pos=addList(tt);
         var temp=await chrome.storage.local.get(tit);
         var parts=Object.values(temp[tit]);
         for(let p of parts) addPart(pos,p);
     }
 }
+
+buildList();

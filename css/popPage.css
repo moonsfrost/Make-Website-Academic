@@ -1,0 +1,12 @@
+.settingicon{
+    width: 30px;
+}
+.shiftModeButton{
+    cursor: pointer;
+}
+*[statu="aca"] *{
+    fill: green;
+}
+*[statu="rec"] *{
+    fill: red;
+}
