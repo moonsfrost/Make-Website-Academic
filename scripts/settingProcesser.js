@@ -6,5 +6,7 @@ document.querySelector(".updateLimitTime").addEventListener("click",()=>{
 
 document.querySelector(".fullRecreation").addEventListener("click",()=>{
     chrome.storage.local.set({mode: -1});
-    setTimeout(alert("已切换至摆烂模式"),500);
+    setTimeout(()=>{
+        alert("已切换至摆烂模式");
+    },500);
 })

@@ -132,7 +132,7 @@ function beginEditPart(e){
     let inp=pos.querySelector(".newText");
     let len=inp.value.length;
     inp.focus();
-    inp.setSelectionRange(len,len);
+    inp.setSelectionRange(0,len);
 }
 
 function editList(e){
@@ -144,10 +144,20 @@ function editList(e){
     //to stop the statu of editing part
     let editingparts=pos.querySelectorAll(".newText");
     for(let p of editingparts) finishEditPart(p);
+    //to prevent other button function
+    let oldIcons=temp.querySelectorAll(".listIcon");
+    for(let p of oldIcons) p.remove();
 
     if(pos.getAttribute("editflag")==="off"){
         let oldTitle=ti.innerHTML;
         ti.innerHTML="<input value=\""+oldTitle+"\"/>";
+
+        let tempIcon=document.createElement("img");
+        tempIcon.src=imgFIle+"edit.svg";
+        tempIcon.classList.add("listIcon");
+        temp.appendChild(tempIcon);
+        tempIcon.addEventListener("click",(e)=>{editList(e.currentTarget)});
+
         for(let p of parts){
             for (let i of ["edit.svg","del.svg"]){
                 var ic=document.createElement("img");
@@ -163,6 +173,9 @@ function editList(e){
     else{
         let newTitle=ti.querySelector("input").value;
         ti.innerHTML=newTitle;
+
+        addIconOfList(temp);
+
         chrome.storage.local.get("listTitles").then((item)=>{
             let arr=item["listTitles"];
             arr[getPos(pos)-1]=newTitle;
@@ -178,7 +191,7 @@ function editList(e){
 function newList(){
     chrome.storage.local.get("lists").then((item)=>{
         var ls=item["lists"];
-        let str="表"+ls.length;
+        let str="List"+ls.length;
         ls.push(str);
         chrome.storage.local.set({"lists":ls});
         chrome.storage.local.set({[str]:{}});
@@ -186,10 +199,23 @@ function newList(){
     })
     chrome.storage.local.get("listTitles").then((item)=>{
         var ls=item["listTitles"];
-        let str="表"+ls.length;
+        let str="List"+ls.length;
         ls.push(str);
         chrome.storage.local.set({"listTitles":ls});
     })
+}
+
+function addIconOfList(listTitle){
+    for(let i of ["show.svg","add.svg","edit.svg","export.svg"] ){
+        var ic=document.createElement("img");
+        ic.src=imgFIle+i;
+        ic.classList.add("listIcon");
+        listTitle.appendChild(ic);
+        if(i==="edit.svg") ic.addEventListener("click",(e)=>{editList(e.currentTarget)});
+        else if(i==="add.svg") ic.addEventListener("click",(e)=>{newPart(e.currentTarget.parentNode.parentNode)});
+        else if(i==="export.svg") ic.addEventListener("click",(e)=>{exportContent(e.currentTarget)});
+        else if(i==="show.svg") ic.classList.add("showIcon"),ic.addEventListener("click",(e)=>toggleHide(e.currentTarget));
+    }
 }
 
 function addList(str){
@@ -205,21 +231,25 @@ function addList(str){
     list.setAttribute("editflag","off");
     document.querySelector(".listContainer").appendChild(list);
 
-    for(let i of ["add.svg","edit.svg"] ){
-        var ic=document.createElement("img");
-        ic.src=imgFIle+i;
-        ic.classList.add("listIcon");
-        listTitle.appendChild(ic);
-        if(i==="edit.svg") ic.addEventListener("click",(e)=>{editList(e.currentTarget)});
-        else if(i==="add.svg") ic.addEventListener("click",(e)=>{newPart(e.currentTarget.parentNode.parentNode)});
-    }
+    addIconOfList(listTitle);
 
     return list;
 }
 
-function toggleHide(e){
-    var pos=e.parentNode;
+function exportContent(e){
+    var pos=e.parentNode.parentNode;
+    let parts=pos.querySelectorAll(".part");
+    var str="";
+    for(let p of parts){
+        let pText=p.querySelector(".partText").innerHTML;
+        str=str+strReShift(pText)+"\n";
+    }
+    navigator.clipboard.writeText(str);
+}
 
+function toggleHide(e){
+    var pos=e.parentNode.parentNode;
+    pos.classList.toggle("hiddenList");
 }
 
 async function buildList(){

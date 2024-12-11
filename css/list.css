@@ -5,12 +5,21 @@ img.listIcon{
     float: right;
     width: 20px;
     vertical-align: middle;
+    cursor: pointer;
 }
+
+img.showIcon{
+    transition: all .3s ease-out;
+}
+.hiddenList img.showIcon{
+    transform: rotate(180deg);
+}
+
 div.listContainer{
     z-index: 10000;
     position: fixed;
     right: 0%;
-    top: 60%;
+    top: 45%;
     width: 40%;
     border-radius: 10px;
     background-color: rgb(198, 232, 252);
@@ -37,8 +46,8 @@ div.readyDel:hover{
     background-color: red;
 }
 
-.hidden{
-    display: none !important;
+.hiddenList *.part{
+    display: none;
 }
 .newText{
     margin-left: 10px;
@@ -49,4 +58,5 @@ div.readyDel:hover{
 }
 .containerTitle{
     margin-left: 35%;
+    font-size: 15px;
 }

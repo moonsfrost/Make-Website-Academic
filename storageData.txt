@@ -1,6 +1,7 @@
 - lists -> array
-    - [listTitle] -> object
-        - [pos] -> text
+    - [listTitle] -> object{
+        [pos] -> text
+    }
 - listTitles -> array
 - mode -> 0/1
 - beginTime -> Date.getTime()
