@@ -71,7 +71,6 @@ function delPart(e){
     var obj={},i=0;
     for(let a of parts){
         if(a===pos) continue;
-        alert(a.innerHTML);
         if(a.classList.contains("part")) obj[i]=strReShift(a.querySelector(".partText").innerHTML);
         i++;
     }
@@ -218,10 +217,10 @@ function addIconOfList(listTitle){
     }
 }
 
-function addList(str){
+function addList(str,str2){
     var list=document.createElement("div");
     list.classList.add("list");
-    list.id=str;
+    list.id=(str2===undefined?str:str2);
 
     var listTitle=document.createElement("p");
     listTitle.classList.add("listName");
@@ -263,7 +262,7 @@ async function buildList(){
     for(i=0;i<tot["lists"].length;i++){
         let tit=tot["lists"][i];
         let tt=tts["listTitles"][i];
-        var pos=addList(tt);
+        var pos=addList(tt,tit);
         var temp=await chrome.storage.local.get(tit);
         var parts=Object.values(temp[tit]);
         for(let p of parts) addPart(pos,p);

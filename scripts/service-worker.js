@@ -20,7 +20,7 @@ async function injectMainFun(){
         id: "mainPageForAca",
         js: ["scripts/listMaker.js","scripts/mainPageProcesser.js","scripts/littleFunctionMaker.js"],
         css: ["css/mainPageAca.css","css/list.css"],
-        matches: [mainPageUrl],
+        matches: [mainPageUrl,mainPageUrl+"?spm_id*"],
         persistAcrossSessions: false,
         runAt: "document_end"
     },{
@@ -40,7 +40,7 @@ async function jsShift(flag){
         chrome.scripting.registerContentScripts([{
             id: "videoPageForAca",
             js: ["scripts/listMaker.js","scripts/videoPageProcesser.js","scripts/littleFunctionMaker.js"],
-            css: ["css/videoShieldRecommend.css","css/list.css"],
+            css: ["css/list.css"],
             matches: [videoPageUrl+"*"],
             persistAcrossSessions: false,
             runAt: "document_end"

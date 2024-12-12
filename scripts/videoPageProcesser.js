@@ -1,4 +1,4 @@
-const banChannel=["游戏"];
+const banChannel=["游戏","鬼畜","动画"];
 
 function channelCheck(){
     var ch=document.querySelector(".firstchannel-tag");

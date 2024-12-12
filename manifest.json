@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Make Website Academic",
-    "version": "0.2.1",
+    "version": "1.0.0",
     "host_permissions": ["https://*.bilibili.com/*"],
     "permissions": ["scripting",
                     "webRequest",
@@ -13,7 +13,7 @@
         "service_worker": "scripts/service-worker.js"
     },
     "action": {
-        "default_icon": "images/testicon.png",
+        "default_icon": "images/icon.png",
         "default_popup": "html/popPage.html"
     },
     "web_accessible_resources": [

@@ -64,5 +64,31 @@
             "urlFilter": "https://www.bilibili.com/match",
             "resourceTypes": ["main_frame"]
         }
+    },{
+        "id": 6,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "url": "https://www.bilibili.com"
+            }
+        },
+        "condition": {
+            "urlFilter": "https://www.bilibili.com/v/kichiku/",
+            "resourceTypes": ["main_frame"]
+        }
+    },{
+        "id": 7,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "url": "https://www.bilibili.com"
+            }
+        },
+        "condition": {
+            "urlFilter": "https://www.bilibili.com/v/kichiku/",
+            "resourceTypes": ["main_frame"]
+        }
     }
 ]

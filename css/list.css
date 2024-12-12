@@ -25,7 +25,6 @@ div.listContainer{
     background-color: rgb(198, 232, 252);
 }
 div.videoStatu{
-    top: 20%;
     width: 31%;
 }
 div.list{
@@ -54,7 +53,7 @@ div.readyDel:hover{
     width: 60%;
 }
 .newText:focus{
-    background-color: rgb(180, 228, 199);
+    background-color: rgb(166, 215, 228);
 }
 .containerTitle{
     margin-left: 35%;
