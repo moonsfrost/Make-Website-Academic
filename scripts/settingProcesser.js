@@ -1,5 +1,5 @@
 document.querySelector(".updateLimitTime").addEventListener("click",()=>{
-    var lim=document.querySelector(".limitTime").value;
+    var lim=Number(document.querySelector(".limitTime").value);
     chrome.storage.local.set({limitTime: lim});
     alert("Limit Time has been changed to"+lim);
 })

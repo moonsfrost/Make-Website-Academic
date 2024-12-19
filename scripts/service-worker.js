@@ -111,6 +111,8 @@ function modeShift(flag,alarmNeed){ //alarmNeed is only for when set a new recre
             chrome.storage.local.get("limitTime").then((item)=>{
                 chrome.alarms.create("limitRecreation",{
                     delayInMinutes: item.limitTime
+                }).then(()=>{
+                    console.log("the clock is created and the limit time is"+item.limitTime);
                 })
             })
         }
@@ -137,7 +139,7 @@ chrome.runtime.onInstalled.addListener(()=>{
         chrome.storage.local.set({["listTitles"]:[]});
         chrome.storage.local.set({["mode"]: 0});
         chrome.storage.local.set({["alarmBeginTime"]: -1});
-        chrome.storage.local.set({["limitTime"]: 1});
+        chrome.storage.local.set({["limitTime"]: 30});
     });
     chrome.alarms.clearAll();
 })
