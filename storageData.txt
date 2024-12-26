@@ -7,3 +7,4 @@
 - beginTime -> Date.getTime()
 - limitTime -> 30 (deflaut)
 - fullTime -> year*10000+month*100+date
+- ban -> array

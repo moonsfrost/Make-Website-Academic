@@ -1,0 +1,21 @@
+.banContainer{
+    border: 1px solid;
+    border-radius: 4px;
+    width: 45%;
+    background-color: rgba(128, 141, 153, 0.671);
+}
+.banbar{
+    display: inline-block;
+    text-align: center;
+    border-radius: 2px;
+    height: 16px;
+    border: 1px solid;
+    background-color: white;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+img.delbaricon{
+    width: 12px;
+    vertical-align: middle;
+    cursor: pointer;
+}

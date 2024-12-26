@@ -1,6 +1,6 @@
 # Make-Website-Academic
 
-这是一个让你的B站变得学术化的Chrome拓展（当然也可以用于Edge）
+这是一个让你的B站变得学术化的Chrome拓展（当然也可以用于Edge，~~其实主要就是在Edge的环境下测试的~~）
 
 ### 这个拓展适合的用户
 

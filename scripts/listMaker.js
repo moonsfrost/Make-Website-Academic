@@ -45,7 +45,9 @@ function strReShift(str){
 async function changePartValue(p,str){
     var temp=await chrome.storage.local.get(p.parentNode.id);
     var obj=temp[p.parentNode.id];
+    obj[0]++;
     obj[getPos(p)]=str;
+    p.parentNode.setAttribute("version",obj[0]);
     chrome.storage.local.set({[p.parentNode.id]:obj});
 }
 
@@ -93,7 +95,7 @@ function finishEditPart(e){ // to finish the edit of the part's text
     var pos=e.parentNode;//pos is the part
     // change input to span
     var tex=pos.querySelector(".newText").value;
-    if(this.src===imgFIle+"no.svg"){
+    if(e.src===imgFIle+"no.svg"){
         tex=pos.querySelector(".newText").getAttribute("oldvalue");
     }
     pos.innerHTML="<span class=\"partText\">"+strShift(tex)+"</span>";
@@ -179,7 +181,14 @@ function editList(e){
             let arr=item["listTitles"];
             arr[getPos(pos)-1]=newTitle;
             chrome.storage.local.set({listTitles: arr});
-        })
+            chrome.storage.local.get(pos.id).then((item)=>{
+                var obj=item[pos.id];
+                obj[0]++;
+                pos.setAttribute("version",obj[0]);
+                chrome.storage.local.set({[pos.id]:obj});
+            });
+        });
+
         for(let p of parts){
             let icons=p.querySelectorAll(".listIcon");
             for(let i of icons) i.remove();
@@ -193,8 +202,10 @@ function newList(){
         let str="List"+ls.length;
         ls.push(str);
         chrome.storage.local.set({"lists":ls});
-        chrome.storage.local.set({[str]:{}});
-        addList(str);
+        chrome.storage.local.set({[str]:{"0":0}}).then(()=>{
+            var pos=addList(str);
+            pos.setAttribute("version",0);
+        });
     })
     chrome.storage.local.get("listTitles").then((item)=>{
         var ls=item["listTitles"];
@@ -217,10 +228,13 @@ function addIconOfList(listTitle){
     }
 }
 
-function addList(str,str2){
+function addList(str,str2,pos){
+    //str can be used as id if str2 is undefined, pos can replace added part
     var list=document.createElement("div");
     list.classList.add("list");
     list.id=(str2===undefined?str:str2);
+
+    if(pos!==undefined) list=pos;
 
     var listTitle=document.createElement("p");
     listTitle.classList.add("listName");
@@ -228,7 +242,7 @@ function addList(str,str2){
 
     list.appendChild(listTitle);
     list.setAttribute("editflag","off");
-    document.querySelector(".listContainer").appendChild(list);
+    if(pos===undefined) document.querySelector(".listContainer").appendChild(list);
 
     addIconOfList(listTitle);
 
@@ -260,13 +274,36 @@ async function buildList(){
     var tts=await chrome.storage.local.get("listTitles");
     // alert(tot["lists"]);
     for(i=0;i<tot["lists"].length;i++){
-        let tit=tot["lists"][i];
-        let tt=tts["listTitles"][i];
+        let tit=tot["lists"][i];// tit is the id
+        let tt=tts["listTitles"][i];// tt is the name
         var pos=addList(tt,tit);
         var temp=await chrome.storage.local.get(tit);
         var parts=Object.values(temp[tit]);
-        for(let p of parts) addPart(pos,p);
+        for(let p of parts){
+            if((typeof p)==="number") pos.setAttribute("version",p); 
+            else addPart(pos,p);
+        }
     }
 }
 
 buildList();
+
+window.addEventListener("focus",async ()=>{
+    var ctr=document.querySelector(".listContainer");
+    var ls=ctr.querySelectorAll(".list");
+    var titleName=await chrome.storage.local.get("listTitles");
+    titleName=titleName["listTitles"];
+    for(let p of ls){
+        chrome.storage.local.get(p.id).then((item)=>{
+            var obj=item[p.id];
+            if(Number(p.getAttribute("version"))===obj[0]) return;
+            p.innerHTML="";
+            addList(titleName[getPos(p)-1],p.id,p);
+            var parts=Object.values(obj);
+            for(let z of parts){
+                if((typeof z)==="number") p.setAttribute("version",z); 
+                else addPart(p,z);
+            }
+        })
+    }
+});

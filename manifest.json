@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Make Website Academic",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "host_permissions": ["https://*.bilibili.com/*"],
     "permissions": ["scripting",
                     "webRequest",

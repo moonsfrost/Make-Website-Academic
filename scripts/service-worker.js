@@ -140,6 +140,7 @@ chrome.runtime.onInstalled.addListener(()=>{
         chrome.storage.local.set({["mode"]: 0});
         chrome.storage.local.set({["alarmBeginTime"]: -1});
         chrome.storage.local.set({["limitTime"]: 30});
+        chrome.storage.local.set({["ban"]:["游戏","鬼畜","动画"]})
     });
     chrome.alarms.clearAll();
 })
